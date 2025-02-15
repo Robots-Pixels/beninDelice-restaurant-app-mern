@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import authRouter from "./routes/auth.route.js";
+import { menuRouter } from "./routes/menu.route.js";
 import cors from "cors";
 import path from "path";
 
@@ -17,6 +18,7 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRouter);
+app.use("/api/menu", menuRouter)
 app.use(cors({
   origin: 'http://localhost:5173/',
 }))
@@ -39,6 +41,6 @@ mongoose
 
 app.use(express.static(path.join(__dirname, "/client/dist")));
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-})
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+// })
