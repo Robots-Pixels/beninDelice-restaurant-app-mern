@@ -50,19 +50,17 @@ export default function ReservationCard() {
                 
                 <div className='flex flex-col gap-4 sm:grid sm:grid-cols-3 sm:gap-3'>
                     <div className='flex flex-col space-y-2'>
-                        <input value="2024-12-31" type='date' id='date' required className='px-2 py-1 border border-gray-300 rounded w-full text-black' />
+                        <input type='date' id='date' required className='px-2 py-1 border border-gray-300 rounded w-full text-black' />
                     </div>
 
                     <div className='flex flex-col space-y-2'>
-                        <input value="00:00" type='time' id='heure' required className='px-2 py-1 border bg-white border-gray-300 rounded w-full text-black' />
+                        <input  type='time' id='heure' required className='px-2 py-1 border bg-white border-gray-300 rounded w-full text-black' />
                     </div>
 
                     <div className='flex flex-col space-y-2'>
                         <input type='number' id='invites' required className='px-2 py-1 border border-gray-300 rounded' placeholder='Nombre de personnes' />
                     </div>
                 </div>
-
-                
 
 
                 <div className='flex flex-col space-y-2 text-gray-400 rounded mb-2'>

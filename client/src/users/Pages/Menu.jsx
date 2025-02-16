@@ -5,7 +5,7 @@ import ignamePilée from '../../assets/images/ignamePilée.webp';
 import amiwo from '../../assets/images/amiwo.jpg';
 import wassa from '../../assets/images/wassa.jpeg';
 import {faSquare} from "@fortawesome/free-solid-svg-icons"
-import { Link } from 'react-router-dom'
+import { data, Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' 
 import { 
   faMagnifyingGlass,
@@ -16,15 +16,25 @@ import MenuItem from '../Components/MenuItem';
 import MenuLink from "../Components/MenuLink"
 
 export default function Menu() {
+  const [categorySelected, setCategorySelected] = useState("Plats Principaux");
+  const [menu, setMenu] = useState(null)
 
-  // const handleSearchBarToogle = () => {
-  //   const searchBar = document.querySelector('#search input');
-  //   const serchIcon = document.querySelector('#search svg');
-  //   searchBar.classList.toggle('hidden');
-  //   serchIcon.classList.toggle('hidden');
-  // }
+  useEffect(() => {
+    const fetchMenu = async () => {
+      try{
+        const response = await fetch("http://localhost:3000/api/menu/all"
+        )
+        const menu = await response.json()
+        setMenu(menu)
+      }
+      catch(error){
+        console.log(error)
+      }
+    }
 
-  const [categorySelected, setCategorySelected] = useState("Plats principaux");
+    fetchMenu();
+
+  }, [])
 
   return (
     <main className="overflow-hidden">
@@ -83,14 +93,13 @@ export default function Menu() {
 
           <div id='menu-items' className='flex flex-col sm:grid grid-cols-2 gap-y-7 gap-x-6 mt-5'>
 
-            <MenuItem image={ignamePilée} title="Igname pilée" description="Un plat emblématique du Bénin, combinant la douceur de l’igname pilée avec une sauce arachide onctueuse et riche en saveurs locales." price="5000"/>
-
-            <MenuItem image={amiwo} title="Amiwô" description="Un plat béninois authentique à base de riz ou de pâte de maïs, cuisiné avec une sauce tomate riche en épices locales, souvent accompagné de viande ou de poisson pour une explosion de saveurs traditionnelles." price="5000"/>
-            
-            <MenuItem image={wassa} title="Wassa-Wassa" description="Un plat traditionnel à base de semoule de manioc, souvent accompagné de légumes sautés, de poisson ou de viande, et relevé par des épices locales pour une expérience culinaire authentiquement béninoise." price="5000"/>
-
-            <MenuItem image={ignamePilée} title="Igname pilée" description="Un plat emblématique du Bénin, combinant la douceur de l’igname pilée avec une sauce arachide onctueuse et riche en saveurs locales." price="5000"/>
-
+            {
+              menu && menu.map((dish) => {
+                if (dish.category.toLocaleLowerCase().trim() === categorySelected.toLocaleLowerCase().trim()){
+                  return (<MenuItem key={dish.name} image={dish.image} title={dish.name} description={dish.description} price={dish.min_price}/>)
+                }
+              })
+            }
           </div>
 
         </div>

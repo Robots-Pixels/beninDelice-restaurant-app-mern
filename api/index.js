@@ -17,11 +17,9 @@ app.use(express.json());
 
 
 // Routes
+app.use(cors());
 app.use("/api/auth", authRouter);
-app.use("/api/menu", menuRouter)
-app.use(cors({
-  origin: 'http://localhost:5173/',
-}))
+app.use("/api/menu", menuRouter);
 
 // Connexion à MongoDB et démarrage du serveur
 mongoose
@@ -41,6 +39,6 @@ mongoose
 
 app.use(express.static(path.join(__dirname, "/client/dist")));
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
-// })
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client", "dist", "index.html"));
+})

@@ -7,7 +7,6 @@ import { signInFailure, signInStart, signInSucces } from "../../redux/user/userS
 import { useNavigate } from "react-router-dom";
 import { signInWithPopup } from "firebase/auth";
 
-
 export default function OAuth({ children }) {
   const [modalOpened, setModalOpened] = useState(false);
   const [modalData, setModalData] = useState(null);
