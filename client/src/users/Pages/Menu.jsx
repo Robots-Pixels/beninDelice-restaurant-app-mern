@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import backGroundFruit from '../../assets/images/backgroundFruit.svg'
 import underline from "../../assets/images/underline.svg"
-import ignamePilée from '../../assets/images/ignamePilée.webp';
-import amiwo from '../../assets/images/amiwo.jpg';
-import wassa from '../../assets/images/wassa.jpeg';
 import {faSquare} from "@fortawesome/free-solid-svg-icons"
-import { data, Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome' 
 import { 
   faMagnifyingGlass,
@@ -17,7 +13,9 @@ import MenuLink from "../Components/MenuLink"
 
 export default function Menu() {
   const [categorySelected, setCategorySelected] = useState("Plats Principaux");
-  const [menu, setMenu] = useState(null)
+  const [menu, setMenu] = useState(null);
+  const [search, setSearch] = useState("");
+  const [matcingItems, setMatchingItems] = useState([]);
 
   useEffect(() => {
     const fetchMenu = async () => {
@@ -25,7 +23,8 @@ export default function Menu() {
         const response = await fetch("http://localhost:3000/api/menu/all"
         )
         const menu = await response.json()
-        setMenu(menu)
+        setMenu(menu);
+        localStorage.setItem("menu", JSON.stringify(menu));
       }
       catch(error){
         console.log(error)
@@ -35,6 +34,20 @@ export default function Menu() {
     fetchMenu();
 
   }, [])
+
+  const handleSearch = (e) => {
+    setSearch(prev => e.target.value);
+  }
+
+  useEffect(() => {
+    if (menu){
+      setMatchingItems(menu.filter(dish => dish.name.toLocaleLowerCase().trim().includes(search.toLocaleLowerCase().trim())))
+    }    
+  }, [search])
+
+  useEffect(() => {
+    console.log(matcingItems);
+  }, [matcingItems])
 
   return (
     <main className="overflow-hidden">
@@ -80,13 +93,18 @@ export default function Menu() {
         <div className="mx-auto px-7 max-w-xl sm:max-w-7xl">
 
           <div id='search'
-            className='flex items-center bg-third text-white px-5 py-3 rounded-md mt-5 cursor-pointer mx-auto
-            sm:mb-[4.2rem] sm:max-w-[25rem]'>
+            className='flex items-center bg-third text-white px-5 py-3 rounded-md mt-5 mx-auto
+            sm:mb-[4.2rem] sm:max-w-[25rem] z-30'>
 
-            <input className='bg-third outline-none text-md placeholder:font-semibold placeholder:text-[17px] placeholder:text-[#ffffffb3]' type="text" placeholder="Rechercher un plat"/>
+            <input 
+            onChange={handleSearch}
+            value={search}
+            className='bg-third outline-none text-md placeholder:font-semibold placeholder:text-[17px] placeholder:text-[#ffffffb3] z-30 w-[80%]' 
+            type="text" 
+            placeholder="Rechercher un plat"/>
 
             <FontAwesomeIcon
-            className='ml-auto text-1xl'
+            className='ml-auto text-1xl cursor-pointer z-30'
             icon={faMagnifyingGlass} />
 
           </div>
@@ -94,11 +112,21 @@ export default function Menu() {
           <div id='menu-items' className='flex flex-col sm:grid grid-cols-2 gap-y-7 gap-x-6 mt-5'>
 
             {
-              menu && menu.map((dish) => {
-                if (dish.category.toLocaleLowerCase().trim() === categorySelected.toLocaleLowerCase().trim()){
-                  return (<MenuItem key={dish.name} image={dish.image} title={dish.name} description={dish.description} price={dish.min_price}/>)
-                }
-              })
+
+                matcingItems.length === 0 ?
+
+                menu && menu.map((dish) => {
+                  if (dish.category.toLocaleLowerCase().trim() === categorySelected.toLocaleLowerCase().trim()){
+                    return (<MenuItem key={dish.name} image={dish.image} title={dish.name} description={dish.description} price={dish.min_price}/>)
+                  }
+                })
+
+                :
+                
+                matcingItems.map((item) => {
+                  return (<MenuItem key={item.name} image={item.image} title={item.name} description={item.description} price={item.min_price}/>)
+                })
+               
             }
           </div>
 

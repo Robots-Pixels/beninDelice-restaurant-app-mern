@@ -6,7 +6,7 @@ import {
   
 export default function MenuItem({image, title, description, price}) {
     return (
-        <div className='rounded-md bg-[#D3D3D3] object-cover overflow-hidden w-full sm:bg-transparent sm:flex sm:items-center sm:max-h-[15rem]'>
+        <div className='rounded-md bg-[#D3D3D3] object-cover overflow-hidden w-full sm:bg-transparent sm:flex sm:items-center sm:max-h-[15rem] z-30'>
 
             <div style={{backgroundImage: `url(${image})`}} className='w-full aspect-[4/3] bg-cover bg-center min-h-[180px]
                 sm:rounded-md sm:aspect-[1/1]'>
